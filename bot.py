@@ -17,6 +17,40 @@ from aiogram.fsm.state import State, StatesGroup
 from config import BOT_TOKEN, ADMIN_ID
 
 
+
+
+
+
+import os
+import threading
+from flask import Flask
+
+# =======================
+# Фоновый Flask-сервер для Render
+# =======================
+app = Flask('')
+
+@app.route('/')
+def home():
+    return "Bot is alive!"
+
+def run_flask():
+    port = int(os.getenv("PORT", 8080))
+    app.run(host='0.0.0.0', port=port)
+
+def keep_alive():
+    t = threading.Thread(target=run_flask)
+    t.daemon = True
+    t.start()
+
+
+
+
+
+
+
+
+
 # =======================
 # Состояния
 # =======================
@@ -352,6 +386,7 @@ async def main():
 
 if __name__ == "__main__":
     try:
+        keep_alive()
         asyncio.run(main())
     except (KeyboardInterrupt, SystemExit):
         print("🛑 Бот успешно остановлен!")
