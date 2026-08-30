@@ -224,7 +224,7 @@ async def finish_submission(message_obj, state: FSMContext):
     source_text = data.get("source_text", "").strip()
 
     username = data.get("username")
-    full_name = html.quote(data.get("full_name", ""))
+    full_name = html.escape(data.get("full_name", ""))
 
     sender = f"@{username}" if username else full_name
 
@@ -295,9 +295,9 @@ async def collect_content(message: Message, state: FSMContext):
 
     incoming_text = ""
     if message.caption:
-        incoming_text = html.quote(message.caption)
+        incoming_text = html.escape(message.caption)
     elif message.text:
-        incoming_text = html.quote(message.text)
+        incoming_text = html.escape(message.text)
 
     if message.photo:
         photos.append(message.photo[-1].file_id)
@@ -334,7 +334,7 @@ async def collect_solution(message: Message, state: FSMContext):
     solution_text = data.get("solution_text", "")
 
     if message.text:
-        clean_text = html.quote(message.text)
+        clean_text = html.escape(message.text)
         solution_text += ("\n" if solution_text else "") + clean_text
 
     await state.update_data(solution_text=solution_text)
@@ -360,7 +360,7 @@ async def collect_source(message: Message, state: FSMContext):
     source_text = data.get("source_text", "")
 
     if message.text:
-        clean_text = html.quote(message.text)
+        clean_text = html.escape(message.text)
         source_text += ("\n" if source_text else "") + clean_text
 
     await state.update_data(source_text=source_text)
